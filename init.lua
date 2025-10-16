@@ -172,18 +172,18 @@ vim.o.confirm = true
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+-- jk to exit Insert mode
+vim.keymap.set('i', 'jk', '<Esc>', { noremap = true, silent = true })
+
+-- <leader>r to save and run current Python file
+vim.keymap.set('n', '<leader>r', ':w<CR>:!python %<CR>', { desc = 'Run Python script' })
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-
--- jk to exit Insert mode
-vim.keymap.set('i', 'jk', '<Esc>', { noremap = true, silent = true })
-
--- <leader>r to save and run current Python file
-vim.keymap.set('n', '<leader>r', ':w<CR>:!python %<CR>', { desc = 'Run Python script' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -359,11 +359,9 @@ require('lazy').setup({
       },
     },
   },
-
-  {
+  { 
     'github/copilot.vim',
     config = function()
-      vim.cmd 'Copilot setup'
     end,
   },
 
