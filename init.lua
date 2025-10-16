@@ -182,6 +182,9 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- jk to exit Insert mode
 vim.keymap.set('i', 'jk', '<Esc>', { noremap = true, silent = true })
 
+-- <leader>r to save and run current Python file
+vim.keymap.set('n', '<leader>r', ':w<CR>:!python %<CR>', { desc = 'Run Python script' })
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
