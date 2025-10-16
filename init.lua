@@ -164,11 +164,6 @@ vim.o.scrolloff = 10
 -- Automatically change to the directory of the currently opened file
 vim.o.autochdir = true
 
--- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
--- instead raise a dialog asking if you wish to save the current file(s)
--- See `:help 'confirm'`
-vim.o.confirm = true
-
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -359,10 +354,9 @@ require('lazy').setup({
       },
     },
   },
-  { 
+  {
     'github/copilot.vim',
-    config = function()
-    end,
+    config = function() end,
   },
 
   -- NOTE: Plugins can specify dependencies.
@@ -900,6 +894,7 @@ require('lazy').setup({
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
+        transparent = true, -- Enable this to disable setting the background color
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
@@ -1028,3 +1023,4 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
