@@ -360,6 +360,13 @@ require('lazy').setup({
     },
   },
 
+  {
+    'github/copilot.vim',
+    config = function()
+      vim.cmd 'Copilot setup'
+    end,
+  },
+
   -- NOTE: Plugins can specify dependencies.
   --
   -- The dependencies are proper plugin specifications as well - anything
