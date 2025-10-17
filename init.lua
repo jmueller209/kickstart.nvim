@@ -28,7 +28,7 @@ What is Kickstart?
     The goal is that you can read every line of code, top-to-bottom, understand
     what your configuration is doing, and modify it to suit your needs.
 
-    Once you've done that, you can start exploring, configuring and tinkering to
+    Once you've done that, you can start expne floring, configuring and tinkering to
     make Neovim your own! That might mean leaving Kickstart just the way it is for a while
     or immediately breaking it into modular pieces. It's up to you!
 
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -359,6 +359,27 @@ require('lazy').setup({
     config = function() end,
   },
 
+  {
+    'lervag/vimtex',
+    lazy = false, -- load immediately
+    init = function()
+      -- PDF viewer
+      vim.g.vimtex_view_method = 'zathura'
+
+      -- Use Tectonic instead of latexmk
+      vim.g.vimtex_compiler_method = 'latexmk'
+
+      -- Continuous compilation (auto-recompile on save)
+      vim.g.vimtex_compiler_continuous = 1
+
+      -- Enable default VimTeX key mappings (\ll, \lv, etc.)
+      vim.g.vimtex_mappings_enabled = 1
+
+      -- Optional: syntax highlighting and indentation
+      vim.g.vimtex_syntax_enabled = 1
+      vim.g.vimtex_indent_enabled = 1
+    end,
+  },
   -- NOTE: Plugins can specify dependencies.
   --
   -- The dependencies are proper plugin specifications as well - anything
@@ -1023,4 +1044,3 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
