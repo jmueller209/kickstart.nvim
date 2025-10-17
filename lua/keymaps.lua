@@ -75,27 +75,43 @@ local function get_pio_root()
   return vim.fn.fnamemodify(root, ':h')
 end
 
--- Only define keymaps if a PlatformIO project exists
-local root = get_pio_root()
-if root then
-  -- Compile & Upload
-  function _G.pio_run_upload()
-    vim.cmd 'w' -- save current buffer
-    vim.cmd('rightbelow vnew | vertical resize 50 | terminal platformio run --target upload -d ' .. root)
+-- Define global functions once
+function _G.pio_run_upload()
+  local root = get_pio_root()
+  if not root then
+    print 'Not a PlatformIO project!'
+    return
   end
-
-  -- Open Serial Monitor only
-  function _G.pio_serial_monitor()
-    vim.cmd('rightbelow vnew | vertical resize 50 | terminal platformio device monitor -d ' .. root)
-  end
-
-  -- Buffer-local keymaps
-  vim.api.nvim_buf_set_keymap(0, 'n', '<leader>rr', ':lua _G.pio_run_upload()<CR>', { noremap = true, silent = true, desc = 'PlatformIO: Compile & Upload' })
-  vim.api.nvim_buf_set_keymap(
-    0,
-    'n',
-    '<leader>ro',
-    ':lua _G.pio_serial_monitor()<CR>',
-    { noremap = true, silent = true, desc = 'PlatformIO: Serial Monitor Only' }
-  )
+  vim.cmd 'w' -- save current buffer
+  vim.cmd('rightbelow vnew | vertical resize 50 | terminal platformio run --target upload -d ' .. root)
 end
+
+function _G.pio_serial_monitor()
+  local root = get_pio_root()
+  if not root then
+    print 'Not a PlatformIO project!'
+    return
+  end
+  vim.cmd('rightbelow vnew | vertical resize 50 | terminal platformio device monitor -d ' .. root)
+end
+
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = vim.api.nvim_create_augroup('PlatformIOKeys', { clear = true }),
+  callback = function()
+    local root = get_pio_root()
+    if root then
+      -- Only define buffer-local keys if they aren't already set
+      local opts = { noremap = true, silent = true }
+      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>rr', ':lua _G.pio_run_upload()<CR>', opts)
+      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>ro', ':lua _G.pio_serial_monitor()<CR>', opts)
+    end
+  end,
+})
+
+vim.keymap.set('n', '<leader>fv', function()
+  local file = vim.fn.expand '%:p'
+  vim.cmd 'write' -- save current buffer
+  vim.fn.system { 'vhdlfmt', '--write', file }
+  vim.cmd 'edit' -- reload the formatted file
+  print 'VHDL file formatted!'
+end, { desc = 'Format VHDL file using vhdlfmt' })
