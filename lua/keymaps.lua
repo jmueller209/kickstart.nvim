@@ -95,15 +95,56 @@ function _G.pio_serial_monitor()
   vim.cmd('rightbelow vnew | vertical resize 50 | terminal platformio device monitor -d ' .. root)
 end
 
+-- 🆕 New function: generate compile_commands.json
+function _G.pio_generate_compiledb()
+  local root = get_pio_root()
+  if not root then
+    print 'Not a PlatformIO project!'
+    return
+  end
+  vim.cmd 'w' -- save current buffer
+  -- Run pio from project root so compile_commands.json appears there
+  vim.cmd('rightbelow vnew | vertical resize 50 | terminal cd ' .. root .. ' && platformio run -t compiledb')
+  -- Delay LSP restart to give time for PlatformIO to finish writing compile_commands.json
+  vim.defer_fn(function()
+    print '🔄 Restarting LSP to reload compile_commands.json...'
+    vim.cmd 'LspRestart'
+  end, 3000) -- delay in milliseconds (3 seconds)
+end
+
+-- Autocmd to set keymaps when entering a PlatformIO project
 vim.api.nvim_create_autocmd('BufEnter', {
   group = vim.api.nvim_create_augroup('PlatformIOKeys', { clear = true }),
   callback = function()
     local root = get_pio_root()
     if root then
-      -- Only define buffer-local keys if they aren't already set
-      local opts = { noremap = true, silent = true }
-      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>rr', ':lua _G.pio_run_upload()<CR>', opts)
-      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>ro', ':lua _G.pio_serial_monitor()<CR>', opts)
+      local opts = { noremap = true, silent = true, buffer = true }
+      vim.keymap.set(
+        'n',
+        '<leader>rr',
+        _G.pio_run_upload,
+        vim.tbl_extend('force', opts, {
+          desc = 'PlatformIO: build & upload',
+        })
+      )
+
+      vim.keymap.set(
+        'n',
+        '<leader>ro',
+        _G.pio_serial_monitor,
+        vim.tbl_extend('force', opts, {
+          desc = 'PlatformIO: open serial monitor',
+        })
+      )
+
+      vim.keymap.set(
+        'n',
+        '<leader>rc',
+        _G.pio_generate_compiledb,
+        vim.tbl_extend('force', opts, {
+          desc = 'PlatformIO: generate compile_commands.json',
+        })
+      )
     end
   end,
 })
