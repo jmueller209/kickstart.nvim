@@ -5,6 +5,5 @@ require 'settings'
 require 'keymaps'
 
 -- external plugin setup
-require 'load_external_plugins'
 
--- local plugin setup
+require 'load_external_plugins'

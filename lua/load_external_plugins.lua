@@ -133,7 +133,6 @@ require('lazy').setup({
     'github/copilot.vim',
     config = function() end,
   },
-
   {
     'lervag/vimtex',
     lazy = false, -- load immediately
@@ -266,7 +265,11 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
-
+  {
+    'ThePrimeagen/harpoon',
+    commit = '0378a6c',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+  },
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
